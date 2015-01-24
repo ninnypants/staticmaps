@@ -1,0 +1,16 @@
+{
+    "name": "ninnypants/staticmaps",
+    "description": "Defines a group of shortcodes that allow users to generate custom static maps without having to deal with setting a custom src for an image",
+    "require": {
+        "phpunit/phpunit": "~4.4",
+        "phpunit/php-code-coverage": "~2.0",
+        "10up/wp_mock": "~0.1"
+    },
+    "license": "GPLv2",
+    "authors": [
+        {
+            "name": "ninnypants",
+            "email": "tyrel@ninnypants.com"
+        }
+    ]
+}
