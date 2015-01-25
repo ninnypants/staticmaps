@@ -7,4 +7,4 @@ require_once '../vendor/autoload.php';
 /**
  * Require plugin file
  */
-require_once '../staticmaps.php';
+require_once '../includes/class-staticmaps.php';
