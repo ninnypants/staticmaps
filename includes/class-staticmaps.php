@@ -11,7 +11,7 @@ class StaticMaps {
 		'height' => 400,
 		// 'size' => '500x400',
 		'scale' => 1,
-		'format' => 'PNG',
+		'format' => 'png',
 		'maptype' => 'roadmap',
 		// 'language' => '',
 		// 'region' => '',
@@ -72,5 +72,15 @@ class StaticMaps {
 		}
 
 		return $zoom;
+	}
+
+	public function prep_format( $value ) {
+		$format = strtolower( $value );
+
+		if ( ! in_array( $format, array( 'png8', 'png', 'png32', 'gif', 'jpg', 'jpg-baseline', ) ) ) {
+			return $this->defaults['format'];
+		}
+
+		return $format;
 	}
 }

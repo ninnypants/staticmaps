@@ -44,7 +44,23 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_prep_format() {
-		$this->markTestIncomplete();
+		// make sure we get a format back even if we pass and empty string
+		$this->assertEquals( 'png', self::$instance->prep_format( '' ) );
+
+		// test to make sure that an outside string gets a default of png
+		$this->assertEquals( 'png', self::$instance->prep_format( 'format' ) );
+
+		// make sure that uppercase and mixed case strings work
+		$this->assertEquals( 'png', self::$instance->prep_format( 'PNG' ) );
+		$this->assertEquals( 'png', self::$instance->prep_format( 'pNG' ) );
+
+		// test all available fomats to see if we get them back
+		$this->assertEquals( 'png8', self::$instance->prep_format( 'png8' ) );
+		$this->assertEquals( 'png', self::$instance->prep_format( 'png' ) );
+		$this->assertEquals( 'png32', self::$instance->prep_format( 'png32' ) );
+		$this->assertEquals( 'gif', self::$instance->prep_format( 'gif' ) );
+		$this->assertEquals( 'jpg', self::$instance->prep_format( 'jpg' ) );
+		$this->assertEquals( 'jpg-baseline', self::$instance->prep_format( 'jpg-baseline' ) );
 	}
 
 	public function test_prep_scale() {
