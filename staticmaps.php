@@ -3,7 +3,7 @@
 Plugin Name: Static Maps
 Plugin URI: http://ninnypants.com
 Description: Google static map image generator
-Version: 1.0
+Version: 0.1.0
 Author: ninnypants
 Author URI: http://ninnypants.com
 License: GPL2

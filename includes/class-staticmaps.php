@@ -3,13 +3,26 @@
  * @package StaticMaps
  */
 class StaticMaps {
+	/**
+	 * Base static map url
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
 	protected $base_url = 'https://maps.googleapis.com/maps/api/staticmap';
+
+	/**
+	 * Defaults to be used for any required vaues that aren't passed to the
+	 * shortcode
+	 *
+	 * @since 0.1.0
+	 * @var array
+	 */
 	protected $defaults = array(
 		'center' => 'Provo, UT',
 		'zoom' => 12,
 		'width' => 500,
 		'height' => 400,
-		// 'size' => '500x400',
 		'scale' => 1,
 		'format' => 'png',
 		'maptype' => 'roadmap',
@@ -17,6 +30,9 @@ class StaticMaps {
 		// 'region' => '',
 	);
 
+	/**
+	 * Register shortcodes
+	 */
 	public function __construct() {
 		add_shortcode( 'map', array( $this, 'shortcode_map' ) );
 		add_shortcode( 'marker', array( $this, 'shortcode_marker' ) );
@@ -74,6 +90,20 @@ class StaticMaps {
 		return $zoom;
 	}
 
+	/**
+	 * Make sure that the format is one of the allowed types.
+	 *
+	 * - png8 or png (default) specifies the 8-bit PNG format.
+     * - png32 specifies the 32-bit PNG format.
+     * - gif specifies the GIF format.
+     * - jpg specifies the JPEG compression format.
+     * - jpg-baseline specifies a non-progressive JPEG compression format.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param  string $value Format returned image should be in
+	 * @return string One of the predefined formats or the default format
+	 */
 	public function prep_format( $value ) {
 		$format = strtolower( $value );
 
@@ -84,6 +114,15 @@ class StaticMaps {
 		return $format;
 	}
 
+	/**
+	 * Make sure the width is a valid number and less than 640px
+	 *
+	 * @since 0.1.0
+	 * @todo Setup support for 4x image once api keys are handled
+	 *
+	 * @param  int $value Image width to be validated
+	 * @return int Validated image height
+	 */
 	public function prep_width( $value ) {
 		$width = (int) $value;
 
@@ -98,6 +137,15 @@ class StaticMaps {
 		return $width;
 	}
 
+	/**
+	 * Make sure the height is a valid number and less than 640px
+	 *
+	 * @since 0.1.0
+	 * @todo Setup support for 4x image once api keys are handled
+	 *
+	 * @param  int $value Image height to be validated
+	 * @return int Validated image height
+	 */
 	public function prep_height( $value ) {
 		$height = (int) $value;
 
@@ -112,6 +160,16 @@ class StaticMaps {
 		return $height;
 	}
 
+	/**
+	 * Make sure the scale value is valid. Currently it can be 1 or 2. 4 is supported
+	 * with an API key.
+	 *
+	 * @since 0.1.0
+	 * @todo Add support for 4 once api key handling is added
+	 *
+	 * @param  int $value Integer specifying the desired image scale
+	 * @return int An allowable scale value 1x, 2x, or eventually 4x
+	 */
 	public function prep_scale( $value ) {
 		$scale = (int) $value;
 
@@ -122,8 +180,23 @@ class StaticMaps {
 		return $scale;
 	}
 
+	/**
+	 * Filter maptype attribute and make sure it's an allowed type, or use the default if not.
+	 *
+	 * Allowed types:
+	 * - roadmap (default) specifies a standard roadmap image, as is normally shown on the Google Maps website.
+     * - satellite specifies a satellite image.
+     * - terrain specifies a physical relief map image, showing terrain and vegetation.
+     * - hybrid specifies a hybrid of the satellite and roadmap image, showing a transparent layer of major streets
+     *   and place names on the satellite image.
+     *
+     * @since 0.1.0
+	 *
+	 * @param  string $maptype Type of map to be displayed
+	 * @return string Validated map type or a default
+	 */
 	public function prep_maptype( $maptype ) {
-		if ( ! in_array( $maptype, array( 'roadmap','satellite','terrain','hybrid' ) ) ) {
+		if ( ! in_array( $maptype, array( 'roadmap', 'satellite', 'terrain', 'hybrid' ) ) ) {
 			$maptype = $this->defaults['maptype'];
 		}
 		return $maptype;
