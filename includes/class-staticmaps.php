@@ -83,4 +83,46 @@ class StaticMaps {
 
 		return $format;
 	}
+
+	public function prep_width( $value ) {
+		$width = (int) $value;
+
+		if ( empty( $width ) ) {
+			$width = $this->defaults['width'];
+		}
+
+		if ( 640 < $width ) {
+			$width = 640;
+		}
+
+		return $width;
+	}
+
+	public function prep_height( $value ) {
+		$height = (int) $value;
+
+		if ( empty( $height ) ) {
+			$height = $this->defaults['height'];
+		}
+
+		if ( 640 < $height ) {
+			$height = 640;
+		}
+
+		return $height;
+	}
+
+	public function prep_scale( $value ) {
+		$scale = (int) $value;
+
+		if ( empty( $scale ) || ! in_array( $scale, array( 1, 2 ) ) ) {
+			$scale = $this->defaults['scale'];
+		}
+
+		return $scale;
+	}
+
+	public function prep_maptype( $value ) {
+
+	}
 }
