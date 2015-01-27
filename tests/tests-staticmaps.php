@@ -96,7 +96,13 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_prep_maptype() {
-		$this->markTestIncomplete();
+		// default
+		$this->assertEquals( 'roadmap', self::$instance->prep_maptype( '' ) );
+		// test all possible variations
+		$this->assertEquals( 'roadmap', self::$instance->prep_maptype( 'roadmap' ) );
+		$this->assertEquals( 'satellite', self::$instance->prep_maptype( 'satellite' ) );
+		$this->assertEquals( 'terrain', self::$instance->prep_maptype( 'terrain' ) );
+		$this->assertEquals( 'hybrid', self::$instance->prep_maptype( 'hybrid' ) );
 	}
 
 	public function test_shortcode_map() {

@@ -122,7 +122,10 @@ class StaticMaps {
 		return $scale;
 	}
 
-	public function prep_maptype( $value ) {
-
+	public function prep_maptype( $maptype ) {
+		if ( ! in_array( $maptype, array( 'roadmap','satellite','terrain','hybrid' ) ) ) {
+			$maptype = $this->defaults['maptype'];
+		}
+		return $maptype;
 	}
 }
