@@ -124,5 +124,9 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 
 		self::$instance->shortcode_location( array(), 'Orem, UT', 'location' );
 		$this->assertEquals( array( 'locations' => array( '40.2444,111.6608', 'Orem, UT' ) ), self::$instance->markers[0] );
+
+		// clean up
+		self::$instance->markers = array();
+		unset( self::$instance->current_marker );
 	}
 }
