@@ -215,9 +215,39 @@ class StaticMaps {
 	 * @return string Validated map type or a default
 	 */
 	public function prep_maptype( $maptype ) {
+		$maptype = $this->prep_param( $maptype );
 		if ( ! in_array( $maptype, array( 'roadmap', 'satellite', 'terrain', 'hybrid' ) ) ) {
 			$maptype = $this->defaults['maptype'];
 		}
 		return $maptype;
+	}
+
+	public function prep_marker_color( $value ) {
+		$color = $this->prep_param( $value );
+		if ( empty( $color ) ) {
+			$this->current_marker['color'] = 'red';
+			return;
+		}
+
+		if ( in_array( $color, array( 'black', 'brown', 'green', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white' ) ) ) {
+			$this->current_marker['color'] = $color;
+			return;
+		}
+
+		// clean up a the potential hex
+		$color = str_replace( array( '0x', '#' ), '', $color );
+
+		if ( ! preg_match( '#[0-9a-f]{6}#i', $color ) && ! preg_match( '#[0-9a-f]{3}#i', $color ) ) {
+			$this->current_marker['color'] = 'red';
+			return;
+		}
+
+		if ( preg_match( '#[0-9a-f]{3}#i', $color ) ) {
+			$this->current_marker['color'] = '0x' . $color[0] . $color[0] . $color[1] . $color[1] . $color[2] . $color[2];
+			return;
+		} else {
+			$this->current_marker['color'] = '0x' . $color;
+			return;
+		}
 	}
 }

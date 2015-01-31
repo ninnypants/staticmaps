@@ -111,15 +111,58 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 		$this->markTestIncomplete();
 	}
 
-	public function test_prep_marker_color( $value ) {
+	public function test_prep_marker_color() {
+		self::$instance->markers[] = array();
+		self::$instance->current_marker = &self::$instance->markers[0];
+
+		// test default
+		self::$instance->prep_marker_color( '' );
+		$this->assertEquals( 'red', self::$instance->current_marker['color'] );
+
+		// test all static colors
+		self::$instance->prep_marker_color( 'black' );
+		$this->assertEquals( 'black', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'brown' );
+		$this->assertEquals( 'brown', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'green' );
+		$this->assertEquals( 'green', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'purple' );
+		$this->assertEquals( 'purple', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'yellow' );
+		$this->assertEquals( 'yellow', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'blue' );
+		$this->assertEquals( 'blue', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'gray' );
+		$this->assertEquals( 'gray', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'orange' );
+		$this->assertEquals( 'orange', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'red' );
+		$this->assertEquals( 'red', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'white' );
+		$this->assertEquals( 'white', self::$instance->current_marker['color'] );
+
+		self::$instance->prep_marker_color( '0x000000' );
+		$this->assertEquals( '0x000000', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( '#ffffff' );
+		$this->assertEquals( '0xffffff', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( '333333' );
+		$this->assertEquals( '0x333333', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( '#f3c' );
+		$this->assertEquals( '0xff33cc', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( 'c3f' );
+		$this->assertEquals( '0xcc33ff', self::$instance->current_marker['color'] );
+
+		self::$instance->markers = array();
+		unset( self::$instance->current_marker );
+
 		$this->markTestIncomplete();
 	}
 
-	public function test_prep_marker_size( $value ) {
+	public function test_prep_marker_size() {
 		$this->markTestIncomplete();
 	}
 
-	public function test_prep_marker_label( $value ) {
+	public function test_prep_marker_label() {
 		$this->markTestIncomplete();
 	}
 
