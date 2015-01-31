@@ -65,14 +65,25 @@ class StaticMaps {
 	}
 
 	/**
-	 * Make sure the zoom param is an integer, and within the range
-	 * of 0 to 22
+	 * Validates zoom parameter
 	 *
-	 * @param  int $value Zoom level to be used for the map
+	 * This can either be passed an integer between 0 and 22, or the string implicit.
+	 * If passed a number it will make sure it's within the bounds of 0 to 22. If lower
+	 * than the bounds it will return 0, and if higher it will return 22. If passed the
+	 * string implicit it will return nothing triggering the use of Google's implicit
+	 * zoom.{@link https://developers.google.com/maps/documentation/staticmaps/index#ImplicitPositioning}
+	 *
+	 * If neither a number nor the string implicit is passed it will return the default.
+	 *
+	 * @param  int $value Required. Zoom level to be used for the map
 	 * @return int A valid zoom level to be used
 	 */
 	public function prep_zoom( $value ) {
 		$zoom = $this->prep_param( $value );
+
+		if ( 'implicit' === $zoom ) {
+			return;
+		}
 
 		if ( ! is_numeric( $zoom ) ) {
 			return $this->defaults['zoom'];
@@ -94,10 +105,10 @@ class StaticMaps {
 	 * Make sure that the format is one of the allowed types.
 	 *
 	 * - png8 or png (default) specifies the 8-bit PNG format.
-     * - png32 specifies the 32-bit PNG format.
-     * - gif specifies the GIF format.
-     * - jpg specifies the JPEG compression format.
-     * - jpg-baseline specifies a non-progressive JPEG compression format.
+	 * - png32 specifies the 32-bit PNG format.
+	 * - gif specifies the GIF format.
+	 * - jpg specifies the JPEG compression format.
+	 * - jpg-baseline specifies a non-progressive JPEG compression format.
 	 *
 	 * @since 0.1.0
 	 *
@@ -185,12 +196,12 @@ class StaticMaps {
 	 *
 	 * Allowed types:
 	 * - roadmap (default) specifies a standard roadmap image, as is normally shown on the Google Maps website.
-     * - satellite specifies a satellite image.
-     * - terrain specifies a physical relief map image, showing terrain and vegetation.
-     * - hybrid specifies a hybrid of the satellite and roadmap image, showing a transparent layer of major streets
-     *   and place names on the satellite image.
-     *
-     * @since 0.1.0
+	 * - satellite specifies a satellite image.
+	 * - terrain specifies a physical relief map image, showing terrain and vegetation.
+	 * - hybrid specifies a hybrid of the satellite and roadmap image, showing a transparent layer of major streets
+	 *   and place names on the satellite image.
+	 *
+	 * @since 0.1.0
 	 *
 	 * @param  string $maptype Type of map to be displayed
 	 * @return string Validated map type or a default

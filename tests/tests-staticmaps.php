@@ -41,6 +41,8 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 
 		// make sure we get a default if we don't pass an int
 		$this->assertEquals( 12, self::$instance->prep_zoom( 'zoom' ) );
+
+		$this->assertEmpty( self::$instance->prep_zoom( 'implicit' ) );
 	}
 
 	public function test_prep_format() {
