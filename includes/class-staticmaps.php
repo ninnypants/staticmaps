@@ -30,6 +30,10 @@ class StaticMaps {
 		// 'region' => '',
 	);
 
+	public $markers = array();
+
+	public $current_marker;
+
 	/**
 	 * Register shortcodes
 	 */
@@ -51,7 +55,11 @@ class StaticMaps {
 	}
 
 	public function shortcode_location( $atts, $content, $tag ) {
+		if ( empty( $content ) ) {
+			return;
+		}
 
+		$this->current_marker['locations'][] = $content;
 	}
 
 	/**
