@@ -111,6 +111,18 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 		$this->markTestIncomplete();
 	}
 
+	public function test_prep_marker_color( $value ) {
+		$this->markTestIncomplete();
+	}
+
+	public function test_prep_marker_size( $value ) {
+		$this->markTestIncomplete();
+	}
+
+	public function test_prep_marker_label( $value ) {
+		$this->markTestIncomplete();
+	}
+
 	public function test_shortcode_marker() {
 		$this->markTestIncomplete();
 	}
