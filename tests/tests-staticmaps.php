@@ -108,6 +108,26 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_shortcode_map() {
+		// \WP_Mock::wpFunction( 'do_shortcode', array( 'times' => 1 ) );
+		// \WP_Mock::wpFunction( 'wp_parse_args', array(
+		// 	'times' => 1,
+		// 	'return_in_order' => array(
+		// 		array(
+		// 			'center' => 'Provo, UT',
+		// 			'zoom' => 12,
+		// 			'width' => 500,
+		// 			'height' => 400,
+		// 			'scale' => 1,
+		// 			'format' => 'png',
+		// 			'maptype' => 'roadmap',
+		// 			// 'language' => '',
+		// 			// 'region' => '',
+		// 		),
+		// 	),
+		// ) );
+
+		// $this->assertEquals( '', );
+
 		$this->markTestIncomplete();
 	}
 
@@ -151,22 +171,89 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( '0xff33cc', self::$instance->current_marker['color'] );
 		self::$instance->prep_marker_color( 'c3f' );
 		$this->assertEquals( '0xcc33ff', self::$instance->current_marker['color'] );
+		self::$instance->prep_marker_color( '33333' );
+		$this->assertEquals( 'red', self::$instance->current_marker['color'] );
 
 		self::$instance->markers = array();
 		unset( self::$instance->current_marker );
-
-		$this->markTestIncomplete();
 	}
 
 	public function test_prep_marker_size() {
-		$this->markTestIncomplete();
+		self::$instance->markers[] = array();
+		self::$instance->current_marker = &self::$instance->markers[0];
+
+		// normal
+		self::$instance->prep_marker_size( '' );
+		$this->assertEquals( '',  self::$instance->current_marker['size'] );
+		self::$instance->prep_marker_size( 'tiny' );
+		$this->assertEquals( 'tiny',  self::$instance->current_marker['size'] );
+		self::$instance->prep_marker_size( 'mid' );
+		$this->assertEquals( 'mid',  self::$instance->current_marker['size'] );
+		self::$instance->prep_marker_size( 'small' );
+		$this->assertEquals( 'small',  self::$instance->current_marker['size'] );
+		self::$instance->prep_marker_size( 'junk' );
+		$this->assertEquals( '',  self::$instance->current_marker['size'] );
+
+		self::$instance->markers = array();
+		unset( self::$instance->current_marker );
 	}
 
 	public function test_prep_marker_label() {
-		$this->markTestIncomplete();
+		self::$instance->markers[] = array();
+		self::$instance->current_marker = &self::$instance->markers[0];
+
+		// allow empty
+		self::$instance->prep_marker_label( '' );
+		$this->assertEmpty( self::$instance->current_marker['label'] );
+		// make sure it gets uppercased
+		self::$instance->prep_marker_label( 'a' );
+		$this->assertEquals( 'A', self::$instance->current_marker['label'] );
+		// only allow A-Z 0-9
+		self::$instance->prep_marker_label( '#' );
+		$this->assertEmpty( self::$instance->current_marker['label'] );
+		// numbers
+		self::$instance->prep_marker_label( '9' );
+		$this->assertEquals( '9', self::$instance->current_marker['label'] );
+		// multiple characters
+		self::$instance->prep_marker_label( 'A9' );
+		$this->assertEquals( 'A', self::$instance->current_marker['label'] );
+
+		self::$instance->markers = array();
+		unset( self::$instance->current_marker );
 	}
 
 	public function test_shortcode_marker() {
+		\WP_Mock::wpFunction( 'do_shortcode', array( 'times' => 2 ) );
+		\WP_Mock::wpFunction( 'wp_parse_args', array(
+			'times' => 2,
+			'return_in_order' => array(
+				array(
+					'color' => '',
+					'size' => '',
+					'label' => '',
+				),
+				array(
+					'color' => '#333',
+					'size' => '',
+					'label' => '',
+				),
+			),
+		) );
+
+		// defaults
+		self::$instance->shortcode_marker( array(), '', 'marker' );
+		$this->assertEquals( 'red', self::$instance->markers[0]['color'] );
+		$this->assertEmpty( self::$instance->markers[0]['label'] );
+		$this->assertEmpty( self::$instance->markers[0]['size'] );
+
+
+		self::$instance->shortcode_marker( array( 'color' => '#333' ), '', 'marker' );
+		$this->assertEquals( '0x333333', self::$instance->markers[1]['color'] );
+		$this->assertEmpty( self::$instance->markers[1]['label'] );
+		$this->assertEmpty( self::$instance->markers[1]['size'] );
+
+		// empty markers
+		self::$instance->markers = array();
 		$this->markTestIncomplete();
 	}
 
@@ -178,6 +265,9 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( array( 'locations' => array( '40.2444,111.6608' ) ), self::$instance->markers[0] );
 
 		self::$instance->shortcode_location( array(), 'Orem, UT', 'location' );
+		$this->assertEquals( array( 'locations' => array( '40.2444,111.6608', 'Orem, UT' ) ), self::$instance->markers[0] );
+
+		self::$instance->shortcode_location( array(), '', 'location' );
 		$this->assertEquals( array( 'locations' => array( '40.2444,111.6608', 'Orem, UT' ) ), self::$instance->markers[0] );
 
 		// clean up

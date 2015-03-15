@@ -51,7 +51,32 @@ class StaticMaps {
 	}
 
 	public function shortcode_marker( $atts, $content, $tag ) {
+		$args = wp_parse_args( $atts, array(
+			'color' => '',
+			'size' => '',
+			'label' => '',
+		) );
 
+		$this->markers[] = array(
+			'locations' => array(),
+			'color' => '',
+			'size' => '',
+			'label' => '',
+		);
+
+		// setup our current marker
+		$marker_index = count( $this->markers ) - 1;
+		$this->current_marker = &$this->markers[ $marker_index ];
+
+		// apply attributes
+		$this->prep_marker_color( $args['color'] );
+		$this->prep_marker_label( $args['label'] );
+		$this->prep_marker_size( $args['size'] );
+
+		do_shortcode( $content );
+
+		// remove current marker reference
+		unset( $this->current_marker );
 	}
 
 	public function shortcode_location( $atts, $content, $tag ) {
@@ -237,17 +262,42 @@ class StaticMaps {
 		// clean up a the potential hex
 		$color = str_replace( array( '0x', '#' ), '', $color );
 
-		if ( ! preg_match( '#[0-9a-f]{6}#i', $color ) && ! preg_match( '#[0-9a-f]{3}#i', $color ) ) {
+		if ( ! preg_match( '#^[0-9a-f]{6}$#i', $color ) && ! preg_match( '#^[0-9a-f]{3}$#i', $color ) ) {
 			$this->current_marker['color'] = 'red';
 			return;
 		}
 
-		if ( preg_match( '#[0-9a-f]{3}#i', $color ) ) {
+		if ( preg_match( '#^[0-9a-f]{3}$#i', $color ) ) {
 			$this->current_marker['color'] = '0x' . $color[0] . $color[0] . $color[1] . $color[1] . $color[2] . $color[2];
 			return;
 		} else {
 			$this->current_marker['color'] = '0x' . $color;
 			return;
 		}
+	}
+
+	public function prep_marker_size( $value ) {
+		if ( ! in_array( $value, array( 'tiny', 'mid', 'small' ) ) ) {
+			$this->current_marker['size'] = '';
+			return;
+		}
+
+		$this->current_marker['size'] = $value;
+	}
+
+	public function prep_marker_label( $value ) {
+		$label = preg_replace( '#[^a-z0-9]#i', '', $value );
+
+		if ( empty( $label ) ) {
+			$label = '';
+		}
+
+		$label = strtoupper( $label );
+
+		if ( strlen( $label ) > 1 ) {
+			$label = substr( $label, 0, 1 );
+		}
+
+		$this->current_marker['label'] = $label;
 	}
 }
