@@ -223,9 +223,9 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_shortcode_marker() {
-		\WP_Mock::wpFunction( 'do_shortcode', array( 'times' => 2 ) );
+		\WP_Mock::wpFunction( 'do_shortcode', array( 'times' => 7 ) );
 		\WP_Mock::wpFunction( 'wp_parse_args', array(
-			'times' => 2,
+			'times' => 7,
 			'return_in_order' => array(
 				array(
 					'color' => '',
@@ -237,6 +237,31 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 					'size' => '',
 					'label' => '',
 				),
+				array(
+					'color' => '',
+					'size' => '',
+					'label' => 'F',
+				),
+				array(
+					'color' => '',
+					'size' => '',
+					'label' => 'Foo',
+				),
+				array(
+					'color' => '',
+					'size' => '',
+					'label' => 'foo',
+				),
+				array(
+					'color' => '',
+					'size' => 'tiny',
+					'label' => '',
+				),
+				array(
+					'color' => '',
+					'size' => 'giant',
+					'label' => '',
+				),
 			),
 		) );
 
@@ -245,16 +270,44 @@ class StaticMaps_Tests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( 'red', self::$instance->markers[0]['color'] );
 		$this->assertEmpty( self::$instance->markers[0]['label'] );
 		$this->assertEmpty( self::$instance->markers[0]['size'] );
+		self::$instance->markers = array();
 
 
 		self::$instance->shortcode_marker( array( 'color' => '#333' ), '', 'marker' );
-		$this->assertEquals( '0x333333', self::$instance->markers[1]['color'] );
-		$this->assertEmpty( self::$instance->markers[1]['label'] );
-		$this->assertEmpty( self::$instance->markers[1]['size'] );
-
-		// empty markers
+		$this->assertEquals( '0x333333', self::$instance->markers[0]['color'] );
+		$this->assertEmpty( self::$instance->markers[0]['label'] );
+		$this->assertEmpty( self::$instance->markers[0]['size'] );
 		self::$instance->markers = array();
-		$this->markTestIncomplete();
+
+		self::$instance->shortcode_marker( array( 'label' => 'F' ), '', 'marker' );
+		$this->assertEquals( 'red', self::$instance->markers[0]['color'] );
+		$this->assertEquals( 'F', self::$instance->markers[0]['label'] );
+		$this->assertEmpty( self::$instance->markers[0]['size'] );
+		self::$instance->markers = array();
+
+		self::$instance->shortcode_marker( array( 'label' => 'Foo' ), '', 'marker' );
+		$this->assertEquals( 'red', self::$instance->markers[0]['color'] );
+		$this->assertEquals( 'F', self::$instance->markers[0]['label'] );
+		$this->assertEmpty( self::$instance->markers[0]['size'] );
+		self::$instance->markers = array();
+
+		self::$instance->shortcode_marker( array( 'label' => 'foo' ), '', 'marker' );
+		$this->assertEquals( 'red', self::$instance->markers[0]['color'] );
+		$this->assertEquals( 'F', self::$instance->markers[0]['label'] );
+		$this->assertEmpty( self::$instance->markers[0]['size'] );
+		self::$instance->markers = array();
+
+		self::$instance->shortcode_marker( array( 'size' => 'tiny' ), '', 'marker' );
+		$this->assertEquals( 'red', self::$instance->markers[0]['color'] );
+		$this->assertEmpty( self::$instance->markers[0]['label'] );
+		$this->assertEquals( 'tiny', self::$instance->markers[0]['size'] );
+		self::$instance->markers = array();
+
+		self::$instance->shortcode_marker( array( 'size' => 'giant' ), '', 'marker' );
+		$this->assertEquals( 'red', self::$instance->markers[0]['color'] );
+		$this->assertEmpty( self::$instance->markers[0]['label'] );
+		$this->assertEmpty( self::$instance->markers[0]['size'] );
+		self::$instance->markers = array();
 	}
 
 	public function test_shortcode_location() {
