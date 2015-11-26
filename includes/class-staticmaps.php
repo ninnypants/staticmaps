@@ -30,6 +30,14 @@ class StaticMaps {
 		// 'region' => '',
 	);
 
+	/**
+	 * Main map arguments.
+	 *
+	 * @since 0.1.0
+	 * @var array
+	 */
+	protected $args = array();
+
 	public $markers = array();
 
 	public $current_marker;
@@ -44,9 +52,12 @@ class StaticMaps {
 	}
 
 	public function shortcode_map( $atts, $content, $tag ) {
-		$args = wp_parse_args( $atts, $this->defaults );
+		$this->args = wp_parse_args( $atts, $this->defaults );
 
-		$output_url = $this->base_url;
+		// process metadata shortcodes
+		do_shortcode( $content );
+
+		$output_url = $this->generate_url();
 
 	}
 
@@ -85,6 +96,11 @@ class StaticMaps {
 		}
 
 		$this->current_marker['locations'][] = $content;
+	}
+
+	protected function generate_url() {
+		// Build main map parameters.
+
 	}
 
 	/**
