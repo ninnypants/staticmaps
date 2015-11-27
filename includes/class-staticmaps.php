@@ -9,7 +9,7 @@ class StaticMaps {
 	 * @since 0.1.0
 	 * @var string
 	 */
-	protected $base_url = 'https://maps.googleapis.com/maps/api/staticmap';
+	protected $base_url = 'https://maps.googleapis.com/maps/api/staticmap?';
 
 	/**
 	 * Defaults to be used for any required vaues that aren't passed to the
@@ -59,6 +59,7 @@ class StaticMaps {
 
 		$output_url = $this->generate_url();
 
+		return sprintf( '<img class="staticmap" src="%s" width="%d" height="%d">', $output_url, $this->args['width'], $this->args['height'] );
 	}
 
 	public function shortcode_marker( $atts, $content, $tag ) {
@@ -99,8 +100,44 @@ class StaticMaps {
 	}
 
 	protected function generate_url() {
+		$url = $this->base_url;
 		// Build main map parameters.
+		$url .= 'size=' . urlencode( $this->args['width'] . 'x' . $this->args['height'] );
+		$url .= '&zoom=' . urlencode( $this->args['zoom'] );
+		$url .= '&center=' . urlencode( $this->args['center'] );
+		$url .= '&scale=' . urlencode( $this->args['scale'] );
+		$url .= '&format=' . urlencode( $this->args['format'] );
+		$url .= '&maptype=' . urlencode( $this->args['maptype'] );
 
+		// Format markers.
+		foreach ( $this->markers as $marker ) {
+			$marker_parts = [];
+
+			// No point in adding a marker if it doesn't have locations.
+			if ( empty( $marker['locations'] ) ) {
+				continue;
+			}
+
+			if ( ! empty( $marker['color'] ) ) {
+				$marker_parts[] = 'color:' . $marker['color'];
+			}
+
+			if ( ! empty( $marker['size'] ) ) {
+				$marker_parts[] = 'size:' . $marker['size'];
+			}
+
+			if ( ! empty( $marker['label'] ) ) {
+				$marker_parts[] = 'label:' . $marker['label'];
+			}
+
+			// Add locations to the marker parts.
+			$marker_parts[] = implode( '|', $marker['locations'] );
+
+			// Put it all together and add it to the url.
+			$url .= '&markers=' . urlencode( implode( '|', $marker_parts ) );
+		}
+
+		return $url;
 	}
 
 	/**
