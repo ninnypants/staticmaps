@@ -96,7 +96,7 @@ class StaticMaps {
 			return;
 		}
 
-		$this->current_marker['locations'][] = $content;
+		$this->current_marker['locations'][] = $this->prep_param( $content );
 	}
 
 	protected function generate_url() {
